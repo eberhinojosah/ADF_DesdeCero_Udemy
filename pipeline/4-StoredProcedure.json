@@ -1,0 +1,33 @@
+{
+	"name": "4-StoredProcedure",
+	"properties": {
+		"activities": [
+			{
+				"name": "Stored procedure",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[SP_REP_EMP_CARGO]"
+				},
+				"linkedServiceName": {
+					"referenceName": "LinkedSevice_ASQL_DB_Curso_ADF_KV",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "4.General Activities"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-08T21:58:43Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

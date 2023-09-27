@@ -1,0 +1,11 @@
+{
+	"name": "LinkedServices_KeyVault",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://azureudemy-kv.vault.azure.net/"
+		}
+	}
+}

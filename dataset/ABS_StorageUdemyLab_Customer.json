@@ -1,0 +1,27 @@
+{
+	"name": "ABS_StorageUdemyLab_Customer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkedServices_StorageUdemyLab",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "3. DataFlow"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "1.PrimerDataFlow",
+				"container": "dataflowdataset"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,95 @@
+{
+	"name": "7-Lookup",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sourceCliente"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sourceServicio"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkCliente"
+				}
+			],
+			"transformations": [
+				{
+					"name": "lookup"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CodCliente as short,",
+				"          Cliente as string,",
+				"          ApePatern as string,",
+				"          FechaNaci as string,",
+				"          DNI as integer,",
+				"          IdServicio as short",
+				"     ),",
+				"     useSchema: false,",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delimited',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '7.Lookup',",
+				"     fileName: 'Cliente.csv',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true) ~> sourceCliente",
+				"source(output(",
+				"          IdServicio as short,",
+				"          Servicio as string,",
+				"          Fecha as date 'dd/MM/yyyy',",
+				"          MontoPagar as short",
+				"     ),",
+				"     useSchema: false,",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delimited',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '7.Lookup',",
+				"     fileName: 'Servicios.csv',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true) ~> sourceServicio",
+				"sourceCliente, sourceServicio lookup(sourceCliente@IdServicio == sourceServicio@IdServicio,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup",
+				"lookup sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '7.Lookup',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true,",
+				"     partitionFileNames:['ReporteCliente.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkCliente"
+			]
+		}
+	}
+}

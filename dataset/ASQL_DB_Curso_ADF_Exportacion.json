@@ -1,0 +1,52 @@
+{
+	"name": "ASQL_DB_Curso_ADF_Exportacion",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkedSevice_ASQL_DB_Curso_ADF_KV",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "6. PowerQuery"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Empresa",
+				"type": "varchar"
+			},
+			{
+				"name": "Fruta",
+				"type": "varchar"
+			},
+			{
+				"name": "Cliente",
+				"type": "varchar"
+			},
+			{
+				"name": "Cantidad_kg",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Anio",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Pais",
+				"type": "varchar"
+			},
+			{
+				"name": "Precio_kg",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Exportacion"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

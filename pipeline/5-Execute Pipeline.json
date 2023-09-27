@@ -1,0 +1,66 @@
+{
+	"name": "5-Execute Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Metadata",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "1-Get Metadata",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute Pipeline Set Variables",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "3-Set Variable",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute Pipeline Stored Procedure",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline Set Variables",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "4-StoredProcedure",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "4.General Activities"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-08T22:02:22Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

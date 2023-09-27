@@ -1,0 +1,35 @@
+{
+	"name": "ADLS_DataLake_udemy_Lab_PQ_Clientes",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkedServices_ADLS_DataLake_Lab_Keyvault",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "6. PowerQuery"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Cliente",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Data Exportaciones.xlsx",
+				"folderPath": "9. Power Query/Data",
+				"fileSystem": "dataset"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "IdCliente",
+				"type": "String"
+			},
+			{
+				"name": "Cliente",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

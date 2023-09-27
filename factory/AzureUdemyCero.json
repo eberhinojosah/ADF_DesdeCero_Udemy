@@ -1,0 +1,9 @@
+{
+	"name": "AzureUdemyCero",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "7950d065-a21a-4085-b29d-c940278e46bf",
+		"tenantId": "f833b249-d640-4d0c-bd8f-e4e317981325"
+	}
+}

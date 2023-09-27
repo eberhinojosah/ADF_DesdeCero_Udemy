@@ -1,0 +1,51 @@
+{
+	"name": "Power Query",
+	"properties": {
+		"activities": [
+			{
+				"name": "Power Query",
+				"type": "ExecuteWranglingDataflow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "powerquery",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"queries": [
+						{
+							"queryName": "UserQuery",
+							"dataflowSinks": [
+								{
+									"name": "UserQueryASQLDBCursoADFExportacion",
+									"dataset": {
+										"referenceName": "ASQL_DB_Curso_ADF_Exportacion",
+										"type": "DatasetReference"
+									},
+									"script": "sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tEmpresa as string,\n\t\tFruta as string,\n\t\tCliente as string,\n\t\tCantidad_kg as integer,\n\t\tAnio as integer,\n\t\tPais as string,\n\t\tPrecio_kg as integer\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> UserQueryASQLDBCursoADFExportacion"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "6. Power Query"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-27T19:34:24Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

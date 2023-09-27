@@ -1,0 +1,55 @@
+{
+	"name": "ADLS_DLUdemyLab_PowerQuery_Expor",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkedServices_ADLS_DataLake_Lab_Keyvault",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "6. PowerQuery"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Data Exportacion",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Data Exportaciones.xlsx",
+				"folderPath": "9. Power Query/Data",
+				"fileSystem": "dataset"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "IDEmpresa",
+				"type": "String"
+			},
+			{
+				"name": "IDFrutas",
+				"type": "String"
+			},
+			{
+				"name": "IDCliente",
+				"type": "String"
+			},
+			{
+				"name": "Cantidad (Kg)",
+				"type": "String"
+			},
+			{
+				"name": "Año",
+				"type": "String"
+			},
+			{
+				"name": "Pais",
+				"type": "String"
+			},
+			{
+				"name": "Precio(kg)",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

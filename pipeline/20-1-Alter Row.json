@@ -1,0 +1,37 @@
+{
+	"name": "20-1-Alter Row",
+	"properties": {
+		"activities": [
+			{
+				"name": "Data flow AlterRow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "20-1-Alter Row",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "3.DataFlow"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-04T17:13:36Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

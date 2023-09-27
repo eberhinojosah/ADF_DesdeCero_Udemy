@@ -1,0 +1,41 @@
+{
+	"name": "1-Filter",
+	"properties": {
+		"activities": [
+			{
+				"name": "Filter",
+				"type": "Filter",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('FileName')",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@contains(item(),'.txt')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"FileName": {
+				"type": "Array",
+				"defaultValue": [
+					"Employee.txt",
+					"Sales.txt",
+					"Employ.json",
+					"Employee.parquet",
+					"Customer.txt"
+				]
+			}
+		},
+		"folder": {
+			"name": "5. Iteration and Conditional"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-13T18:46:01Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

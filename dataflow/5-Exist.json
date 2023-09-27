@@ -1,0 +1,120 @@
+{
+	"name": "5-Exist",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sourceCliente"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sourceServicios"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkClienteExiste"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkClienteNoExist"
+				}
+			],
+			"transformations": [
+				{
+					"name": "ExistCliente"
+				},
+				{
+					"name": "NoExist"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CodCliente as short,",
+				"          Cliente as string,",
+				"          ApePatern as string,",
+				"          FechaNaci as string,",
+				"          DNI as integer,",
+				"          IdServicio as short",
+				"     ),",
+				"     useSchema: false,",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delimited',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '5.Exists',",
+				"     fileName: 'Cliente.csv',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true) ~> sourceCliente",
+				"source(output(",
+				"          IdServicio as short,",
+				"          Servicio as string,",
+				"          Fecha as date 'dd/MM/yyyy',",
+				"          MontoPagar as short",
+				"     ),",
+				"     useSchema: false,",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delimited',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '5.Exists',",
+				"     fileName: 'Servicios.csv',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true) ~> sourceServicios",
+				"sourceCliente, sourceServicios exists(sourceCliente@IdServicio == sourceServicios@IdServicio,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> ExistCliente",
+				"sourceCliente, sourceServicios exists(sourceCliente@IdServicio == sourceServicios@IdServicio,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> NoExist",
+				"ExistCliente sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '5.Exists',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true,",
+				"     partitionFileNames:['ClienteExist.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkClienteExiste",
+				"NoExist sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '5.Exists',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true,",
+				"     partitionFileNames:['ClienteNoExist.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkClienteNoExist"
+			]
+		}
+	}
+}

@@ -1,0 +1,81 @@
+{
+	"name": "10-Aggregate",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedService_ASQL_AWDW2",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sourceCategoriaProducto"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkCategoriaProducto"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn"
+				},
+				{
+					"name": "select"
+				},
+				{
+					"name": "Aggregate"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Categoria as string,",
+				"          Producto as string,",
+				"          UnitPrice as decimal(19,4),",
+				"          UnitPriceDiscount as decimal(19,4)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'query',",
+				"     store: 'sqlserver',",
+				"     query: 'SELECT PC.Name Categoria, P.Name Producto, OD.UnitPrice, OD.UnitPriceDiscount\\nFROM [SalesLT].[ProductCategory] AS PC\\n     INNER JOIN [SalesLT].[Product] AS P ON P.ProductCategoryID=PC.ProductCategoryID\\n     INNER JOIN [SalesLT].[SalesOrderDetail] AS OD ON OD.ProductID=P.ProductID',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> sourceCategoriaProducto",
+				"sourceCategoriaProducto derive(CATEGORIA = upper(Categoria),",
+				"          Producto = upper(Producto),",
+				"          {Monto Total} = toDecimal(UnitPrice-UnitPriceDiscount)) ~> derivedColumn",
+				"derivedColumn select(mapColumn(",
+				"          PRODUCTO = Producto,",
+				"          CATEGORIA = derivedColumn@CATEGORIA,",
+				"          {MONTO TOTAL} = {Monto Total}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select",
+				"select aggregate(groupBy(PRODUCTO,",
+				"          CATEGORIA),",
+				"     SUMA = sum({MONTO TOTAL}),",
+				"          MAXIMO = max({MONTO TOTAL}),",
+				"          MINIMO = min({MONTO TOTAL}),",
+				"          PROMEDIO = toDecimal(avg({MONTO TOTAL})),",
+				"          CONTEO = count({MONTO TOTAL})) ~> Aggregate",
+				"Aggregate sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '10.Aggregate',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true,",
+				"     partitionFileNames:['ProductoCategoria_DerivedColumn.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkCategoriaProducto"
+			]
+		}
+	}
+}

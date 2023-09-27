@@ -1,0 +1,51 @@
+{
+	"name": "DS_Cliente",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADL_DataLakeUdemy",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "2.-Move And Transform Activities"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Cliente Nuevos",
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Cliente.xlsx",
+				"folderPath": "1.Move and Transform Activities",
+				"fileSystem": "dataset"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

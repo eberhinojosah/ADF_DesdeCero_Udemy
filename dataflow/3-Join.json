@@ -1,0 +1,172 @@
+{
+	"name": "3-Join",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sourceProducto"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sourceSubCategoriaProducto"
+				}
+			],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkProductInnerJoin"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkProductLeftJoin"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkProductRightJoin"
+				},
+				{
+					"linkedService": {
+						"referenceName": "LinkedServices_StorageUdemyLab",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sinkProductFullJoin"
+				}
+			],
+			"transformations": [
+				{
+					"name": "InnerJoin"
+				},
+				{
+					"name": "LeftOuterJoin"
+				},
+				{
+					"name": "RigthOuterJoin"
+				},
+				{
+					"name": "FullJoin"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ProductoId as short,",
+				"          NombreProducto as string,",
+				"          ProductoSubCategoriaId as short,",
+				"          Descripcion as string,",
+				"          Categoria as string,",
+				"          Color as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'excel',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '3.Join',",
+				"     fileName: 'Producto.xlsx',",
+				"     sheetName: 'Producto',",
+				"     firstRowAsHeader: true) ~> sourceProducto",
+				"source(output(",
+				"          SubCategoriaProductoId as short,",
+				"          NombreSubCategoria as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'excel',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '3.Join',",
+				"     fileName: 'SubCategoriaProducto.xlsx',",
+				"     sheetName: 'SubCategoriaProducto',",
+				"     firstRowAsHeader: true) ~> sourceSubCategoriaProducto",
+				"sourceProducto, sourceSubCategoriaProducto join(ProductoSubCategoriaId == SubCategoriaProductoId,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> InnerJoin",
+				"sourceProducto, sourceSubCategoriaProducto join(ProductoSubCategoriaId == SubCategoriaProductoId,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> LeftOuterJoin",
+				"sourceProducto, sourceSubCategoriaProducto join(ProductoSubCategoriaId == SubCategoriaProductoId,",
+				"     joinType:'right',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> RigthOuterJoin",
+				"sourceProducto, sourceSubCategoriaProducto join(ProductoSubCategoriaId == SubCategoriaProductoId,",
+				"     joinType:'outer',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> FullJoin",
+				"InnerJoin sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '3.Join',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true,",
+				"     partitionFileNames:['ProductInnerJoin.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkProductInnerJoin",
+				"LeftOuterJoin sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '3.Join',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true,",
+				"     partitionFileNames:['ProductLeftJoin.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkProductLeftJoin",
+				"RigthOuterJoin sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '3.Join',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true,",
+				"     partitionFileNames:['ProductRightJoin.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkProductRightJoin",
+				"FullJoin sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     container: 'dataflowdataset',",
+				"     folderPath: '3.Join',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true,",
+				"     partitionFileNames:['ProductFullJoin.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkProductFullJoin"
+			]
+		}
+	}
+}

@@ -1,0 +1,37 @@
+{
+	"name": "ADLS_DLUdemy_PoweQuery_empresa",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkedServices_ADLS_DataLake_Lab_Keyvault",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "6. PowerQuery"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Empresa.csv",
+				"folderPath": "9. Power Query/Data",
+				"fileSystem": "dataset"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "IdEmpresa",
+				"type": "String"
+			},
+			{
+				"name": "NombreEmpresas",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

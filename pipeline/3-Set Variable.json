@@ -1,0 +1,76 @@
+{
+	"name": "3-Set Variable",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Metadata",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ADLS_GetMetadata",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems",
+						"exists",
+						"itemName",
+						"itemType",
+						"lastModified"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Set variable",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Name",
+					"value": {
+						"value": "@activity('Get Metadata').output.childitems",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"Name": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "4.General Activities"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-08T21:51:53Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

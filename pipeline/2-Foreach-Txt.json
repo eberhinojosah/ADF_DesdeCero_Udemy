@@ -1,0 +1,175 @@
+{
+	"name": "2-Foreach-Txt",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Metadata Folder",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ADLS_DLUdemyLab_Folder",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Set variable File",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata Folder",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "File",
+					"value": {
+						"value": "@activity('Get Metadata Folder').output.childItems",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Filter Txt",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Set variable File",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('File')",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@contains(item().name,'.txt')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach TXT",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Filter Txt",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter Txt').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Copy data TXT",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ADLS_DLUdemyLabo_TXT",
+									"type": "DatasetReference",
+									"parameters": {
+										"Archivo": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ASQL_DB_Curso_ADF_Ventas",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"File": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "5. Iteration and Conditional"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-13T22:07:57Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
